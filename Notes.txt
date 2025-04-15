@@ -1,0 +1,20 @@
+*Benfords law takes into account the first n digits significant digits, so if you have a number 0.00302, 
+the first digit that would count would be 3, the first two digits that would count would be 30, and so on.
+
+*benfords law is most commoly used with base 10, but teh law works for any base system higher than binary 
+
+*applies to but not limited to, electribity bills, street addresses, stock prices, death rates, math and physical 
+constants. benfords law can detect anomalies in accounting fraud, election results, public health datasets,
+research datasets (e.g. biology), images (pixel intensity distributions), and more
+
+*personally digital forensics, which is the one that tests for pixel distributions sounds like a really 
+cool application
+
+*examples: heights of hte 58 tallest structures follow benfords law, leading digit of 2^n also follow the law
+
+*resources: https://github.com/carloscinelli/benford.analysis/tree/master (basically repo package to R package called 
+benford.analysis) we can take reference to some of the cool features they implement 
+
+*for analyzing pixels on image, we could use OpenCV or Pillow which are offered by python 
+(i acutally did not knwo that for OpenCV but cool)
+
