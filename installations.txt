@@ -1,0 +1,6 @@
+Pillow installation: https://pillow.readthedocs.io/en/latest/installation/basic-installation.html
+*personally im going to install this in my wsl 
+this will be used for image processing
+
+Pillow tutorial: https://pillow.readthedocs.io/en/latest/handbook/tutorial.html
+nothing better htan good old documentation >:)
