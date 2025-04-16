@@ -9,4 +9,4 @@ def get_digit_frequencies(filename):
     ret_list = [0] * 10
     for line in str_list:
         ret_list[int(line[0])] += 1
-    return(ret_list)
+    return ret_list
