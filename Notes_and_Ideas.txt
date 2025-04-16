@@ -33,7 +33,8 @@ Image analysis
             pandas, matplotlib, pyplot
     fix up function where if you can edit the pixels so that the image doesnt look as tampered
         promoting fraud
-    
+        applies to pictures with filters and AI generated images
+        before and after comparisons
 Text analysis
     use PyPDF library to parse through pdf 
 
