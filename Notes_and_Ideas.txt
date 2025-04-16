@@ -36,5 +36,7 @@ Image analysis
         applies to pictures with filters and AI generated images
         before and after comparisons
 Text analysis
-    use PyPDF library to parse through pdf 
+    use PyPDF library to parse through .pdf to convert to .txt
+    use pypandoc to convert .docx to .txt
+    RegExr to assist making regular expressions to extract digits from different types of txt files. 
 
