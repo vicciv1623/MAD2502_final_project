@@ -31,12 +31,14 @@ Image analysis
         how much can you deviate from the expected results 
         output into a table
             pandas, matplotlib, pyplot
+        chi-square, cho-gaines d statistic
     fix up function where if you can edit the pixels so that the image doesnt look as tampered
         promoting fraud
         applies to pictures with filters and AI generated images
         before and after comparisons
+        pixel modiciations are possible with pillow
+    other twists
+        sum of first n digits
 Text analysis
-    use PyPDF library to parse through .pdf to convert to .txt
-    use pypandoc to convert .docx to .txt
-    RegExr to assist making regular expressions to extract digits from different types of txt files. 
+    use PyPDF library to parse through pdf 
 
