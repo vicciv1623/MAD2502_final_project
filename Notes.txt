@@ -18,3 +18,22 @@ benford.analysis) we can take reference to some of the cool features they implem
 *for analyzing pixels on image, we could use OpenCV or Pillow which are offered by python 
 (i acutally did not knwo that for OpenCV but cool)
 
+
+
+
+
+*IDEAS for FEATURE IMPLEMENTATION
+Image analysis
+    histogram overlay comparison
+    function that returns new image with its pixels color coded for its sigfigs
+        if image has been tampered then we know WHERE it could have been messed with
+    statistical analysis
+        how much can you deviate from the expected results 
+        output into a table
+            pandas, matplotlib, pyplot
+    fix up function where if you can edit the pixels so that the image doesnt look as tampered
+        promoting fraud
+    
+Text analysis
+    use PyPDF library to parse through pdf 
+
