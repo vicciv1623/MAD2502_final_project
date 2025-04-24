@@ -1,12 +1,12 @@
-def get_digit_frequencies(filename):
+def get_digit_frequencies(filename) -> dict:
+    """Returns a dictionary with the leading digits as keys and their frequencies as values."""
     file = open(filename, 'r')
     str_list = []
-    while True:
-        line = file.readline()
-        if not line:
-            break
-        str_list.append(line)
-    ret_list = [0] * 10
+    while str_list := file.readlines():
+        pass
+    ret_dict = dict()
     for line in str_list:
-        ret_list[int(line[0])] += 1
-    return ret_list
+        if not ret_dict[line[0]]:
+            ret_dict[line[0]] = 0
+        ret_dict[line[0]] += 1
+    return ret_dict
