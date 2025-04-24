@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
+import os
 import sys
 from PIL import Image
 import numpy as np
+from tqdm import tqdm 
 
 def sig_fig(val: int) -> int:
 	val=str(val)
@@ -32,7 +34,7 @@ def draw_hist(distribution: dict[int, float]):
 	print(distribution.keys())
 	colors=[colors[x] for x in distribution.keys()]
 
-	bar = [1+x for x in range(1,4)]
+	bar = [x for x in range(1,4)]
 	bars = plt.bar(
 		bar,
 		height=distribution.values(),
@@ -40,12 +42,48 @@ def draw_hist(distribution: dict[int, float]):
 		tick_label=distribution.keys(),
 		color=colors
 	)
-	plt.show()
+
+	benfords_dist=[30.1, 17.6, 12.5]		#will update distributions
+	digits=[1,2,3]
+	plt.plot(digits, benfords_dist,
+		marker="o"
+	)
+	#plt.show()
+	
+	os.makedirs("Results", exist_ok=True)
+	plt.title("Distribution Frequency")
+	plt.savefig("Results/distribution_freq.png")
+
+def statistical_testing(distribution: dict[int, float]):
+	#Anderson-Darling Test
+	with open("Results/Statistical_Analysis.txt", "w") as file:
+		file.write("DIGIT                    FREQUENCY\n")
+		file.write("----------------------------------\n")
+		for digit, prob in distribution.items():
+			file.write(f"{digit}:                 {prob}%\n")
+
+	#source: https://real-statistics.com/non-parametric-tests/goodness-of-fit-tests/goodness-of-fit-benford-distribution/
+	qi=np.array(list(distribution.values())) / 100
+	pi=[0.301, 0.176, 0.125] #, 9.7, 7.9, 6.7, 5.8, 5.1, 4.6]	#benfords distributions
+	sum_qi=[qi[0]]
+	sum_pi=[pi[0]]
+
+	for i in range(1,3):
+		sum_qi.append(qi[i] + sum_qi[i-1])
+		sum_pi.append(pi[i] + sum_pi[i-1])
+
+	ad_stat=[((pi[x] + pi[x+1])*(sum_qi[x] - sum_pi[x])**2) / (sum_pi[x]*(1-sum_pi[x])) for x in range(2)]
+	print(ad_stat)
+	ad_stat=sum(ad_stat)
+	print(ad_stat * 1.5)
+	return 0	
 
 def main():
 	print("hello world")
 	if len(sys.argv) > 2:
-		print("you added too many arguments")
+		raise Exception("you added too many arguments")
+	elif not os.path.exists(sys.argv[1]):
+		raise FileNotFoundError("File does not exist")
 	print("image file name", sys.argv[1])
 	
 	'''
@@ -61,14 +99,17 @@ def main():
 	print(sigfig_pix[:10])'''
 	
 	temp_distribution={
-		1:10.5,
-		2:20.5,
-		3:40.5
+		1:10.1,
+		2:57.6,
+		3:12.5
 	}
 	print(temp_distribution)
 	draw_hist(temp_distribution)
 	
+	for i in tqdm(range(100), desc="Passing"):
+		pass	
 	
+	statistical_testing(temp_distribution)
 
 if __name__ == "__main__":
 	main()
