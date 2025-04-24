@@ -1,9 +1,9 @@
 *Benfords law takes into account the first n digits significant digits, so if you have a number 0.00302, 
 the first digit that would count would be 3, the first two digits that would count would be 30, and so on.
 
-*benfords law is most commoly used with base 10, but teh law works for any base system higher than binary 
+*benfords law is most commonly used with base 10, but the law works for any base system higher than binary
 
-*applies to but not limited to, electribity bills, street addresses, stock prices, death rates, math and physical 
+*applies to but not limited to, electricity bills, street addresses, stock prices, death rates, math and physical
 constants. benfords law can detect anomalies in accounting fraud, election results, public health datasets,
 research datasets (e.g. biology), images (pixel intensity distributions), and more
 
@@ -16,7 +16,7 @@ cool application
 benford.analysis) we can take reference to some of the cool features they implement 
 
 *for analyzing pixels on image, we could use OpenCV or Pillow which are offered by python 
-(i acutally did not knwo that for OpenCV but cool)
+(I actually did not know that for OpenCV but cool)
 
 
 
@@ -32,11 +32,11 @@ Image analysis
         output into a table
             pandas, matplotlib, pyplot
         chi-square, cho-gaines d statistic
-    fix up function where if you can edit the pixels so that the image doesnt look as tampered
+    fix up function where if you can edit the pixels so that the image doesn't look as tampered
         promoting fraud
         applies to pictures with filters and AI generated images
         before and after comparisons
-        pixel modiciations are possible with pillow
+        pixel modifications are possible with pillow
     other twists
         sum of first n digits
 Text analysis
