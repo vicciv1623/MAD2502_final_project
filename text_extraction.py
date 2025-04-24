@@ -1,16 +1,30 @@
-from pypdf import PdfReader
-import pypandoc
 import re
-
-def file_to_text(file_name : str):
-    """Extracts all text from a .pdf or .docx file and outputs a .txt file"""
-    if file_name.endswith('.pdf'):
-        text_file = PdfReader(file_name)
-    elif file_name.endswith('.docx'):
-        text_file = pypandoc.convert_file(file_name, 'plain', outputfile = "file_name.txt")
 
 def text_extraction(file_name : str, new_file_name : str):
     """Extracts all non-numerical text from a plain text file"""
     with open(file_name, 'r') as f:
-        text = re.findall("[^\d]*", f.read())
+        text = re.findall("[^\d]*", f.read()) #excludes digits
     return open(f"{new_file_name}.txt", text)
+
+def word_frequencies(file_name : str) -> int:
+    """Finds the frequencies of each word in a file"""
+    with open(file_name, 'r') as f:
+        d = dict()
+        text = re.sub("[^a-zA-Z ]", '', f.read())
+        for line in text:
+            line = line.strip().lower()
+            words = line.split(" ")
+            for word in words:
+                if word in d:
+                    d[word] += 1
+                else:
+                    d[word] = 1
+
+    return [(key, value) for key, value in d.items()]
+
+
+
+
+
+
+
