@@ -8,28 +8,45 @@ from scipy.fftpack import dct
 
 
 def calc_DCT(img_np: np.ndarray) -> np.array:
-	height, width=img_np.shape
+	"""
+    This function calculates the DCT coefficiets and then flattens the values into a big long 1d array
 
+    Input: np.ndarray img_np which is in the same shape as the image
+    Output: np.array which is the 1d array containing the DCT coefficients
+	"""
+
+	height, width=img_np.shape
 	blocks=[]
+    #we calculate it in blocks of 8x8
+	#source: https://stackoverflow.com/questions/15978468/using-the-scipy-dct-function-to-create-a-2d-dct-ii
+	#source: https://stackoverflow.com/questions/60052848/discrete-cosine-transform-dct-coefficient-distribution
+	#source: https://medium.com/analytics-vidhya/what-are-dct-coefficients-and-how-jpeg-compression-works-7f46d1e22b4c
 	for i in tqdm(range(0,height,8), desc="Calculating DCT coefficients"):
 		for j in range(0,width,8):
 			block=img_np[i:i+8, j:j+8]
-			block_dct=dct(dct(block.T, norm="ortho").T, norm="ortho")
+			block_dct=dct(dct(block.T, norm="ortho").T, norm="ortho") #referenced from stack overflow
 			blocks.append(block_dct)
 	
-	#coefficients
-	blocks=[i.flatten() for i in blocks]
-	coefficients=np.concatenate(blocks)
+	#coefficients, currently in an array of 8x8 blocks
+	blocks=[i.flatten() for i in blocks]    
+	coefficients=np.concatenate(blocks)     #flattens it out to 1d array (length of heightxwidth)
 	print()	
 
 	return coefficients
 
-def sig_fig(val: int) -> int:
+def sig_fig(val: float) -> int:
+	"""
+    This function extracts the significant digit of a float value
+
+    Input: float value
+    Output: int value ranging from 1-9
+	"""
+
 	val=str(val)
 	char=val[0]
 	
 	i=1
-	while char=="-" or char=="0" or char==".":
+	while char=="-" or char=="0" or char==".":      
 		if i == len(val):
 			return -1
 		char=val[i]
@@ -37,21 +54,44 @@ def sig_fig(val: int) -> int:
 	
 	return int(char)
 
-def retrieve_sigfig(data: list[int]) -> np.array:
+def retrieve_sigfig(data: list[float]) -> np.array:
+	"""
+    This function extracts the significant values for each element in the list
+
+    Input: list[float] data that contains the DCT coeffcietnts
+    Output: np.array of sigfigs containing the significant values 
+	"""
+
 	sigfigs=[sig_fig(i) for i in tqdm(data, desc="Retrieving Significant Figures")]
 	print()
 
 	return np.array(sigfigs)
 
 def calc_distribution(sig_figs: np.array) -> dict[int, float]:
+	"""
+    This function will calculate the relative abundancies for each sigfig
+
+    Input: np.array sig_figs which containes all the sigfigs in 1d array
+    Output: dictionary[int, float] where the keys are sigfig digits 1-9 and the values are the relative proportions
+    """
+
 	digits=[1,2,3,4,5,6,7,8,9]
 	distribution=[100 * sum(sig_figs == i) / len(sig_figs) for i in tqdm(digits, desc="Calculating Distributions")]
 	print()
 
 	return dict(zip(digits, distribution))
 
-def draw_hist(distribution: dict[int, float]):
-	colors={			#will update colors to include all 9 digits
+def draw_bar(distribution: dict[int, float]):
+	"""
+    This function will draw a bar plot displaying the relative abundancies for each significant value.
+    The plot will also have the expected Benford's distribution plotted above the bars
+
+    Input: dictionary[int, float] with the keys as digits 1-9 and the values as the relative proportions
+    Output: None, but a figure of the plot will be saved in the Results directory
+    """
+
+    #plot pixel sigfig frequency distributions
+	colors={			
 		-1:(0, 0, 0),
 		1:(0.941, 0.231, 0.231),
 		2:(0.941, 0.537, 0.231),
@@ -74,8 +114,9 @@ def draw_hist(distribution: dict[int, float]):
 		tick_label=distribution.keys(),
 		color=colors
 	)
-
-	benfords_dist=[30.1, 17.6, 12.5, 9.7, 7.9, 6.7, 5.8, 5.1, 4.6]		#will update distributions
+    
+	#plot benfords stuff
+	benfords_dist=[30.1, 17.6, 12.5, 9.7, 7.9, 6.7, 5.8, 5.1, 4.6]		
 	digits=[1,2,3,4,5,6,7,8,9]
 
 	plt.plot(digits, benfords_dist,
@@ -90,6 +131,16 @@ def draw_hist(distribution: dict[int, float]):
 	plt.savefig("Results/distribution_freq.png")
 
 def statistical_testing(distribution: dict[int, float]):
+	"""
+	This function calculates how much the sigfig distributions are deviant from the expected
+	values by using the Anderson-Darling test. It outputs the results in a saved text file.
+	The text file also holds information about the relative proportions for each digit as well as
+	list the critical values for each significance level.
+
+	Input: dict[int, float] containing the keyts as sigfigs 1-9 and values of their proportions
+	Ouput: a saved text file in the Results directory
+	"""
+
 	#Anderson-Darling Test
 	with open("Results/Statistical_Analysis.txt", "w") as file:
 		file.write("DIGIT                    FREQUENCY\n")
@@ -108,6 +159,7 @@ def statistical_testing(distribution: dict[int, float]):
 		sum_qi.append(qi[i] + sum_qi[i-1])
 		sum_pi.append(pi[i] + sum_pi[i-1])
 
+	#calculate the test statistic
 	ad_stat=[((pi[x] + pi[x+1])*(sum_qi[x] - sum_pi[x])**2) / (sum_pi[x]*(1-sum_pi[x])) for x in range(8)]
 	ad_stat=4.5 * sum(ad_stat)
 	ad_stat=int(ad_stat*10000)/10000
@@ -120,6 +172,13 @@ def statistical_testing(distribution: dict[int, float]):
 		file.write("\nThere is a significant result when the statistic value is greater than the critical value at the corresponding alpha level.\n")
 
 def colorcoding(pixels, sigfigs: np.ndarray):
+	"""
+    This function basically replaces each pixel in the image with a corresponding color for its significant value.
+    For example, a pixel with significant value of 1 will be colored red
+    
+    Input: pixels object, np.ndarray sigfigs (in the same shape as the image)
+    Output: newly modified pixels object 
+	"""
 	colors={
 		-1:(0, 0, 0),			
 		1:(240, 59, 59),
@@ -150,13 +209,13 @@ def main():
 	print(f"Found {sys.argv[1]}!")
 	
 	im=Image.open(sys.argv[1]).convert("L") #converts into grayscale
-	im_np=np.array(im)
+	im_np=np.array(im)   #convert into numpy for easier arithmetic manipulation
 
 	print(f"Image basic information: {im.format}, {im.size}\n")
 
 	height, width=im_np.shape
 
-	#making sure im_np dimensions are divisible by 8
+	#make sure im_np dimensions are divisible by 8
 	im_np=im_np[:height-height%8, :width-width%8]
 	dct_coefficients=calc_DCT(im_np)
 
@@ -164,7 +223,7 @@ def main():
 
 	distributions=calc_distribution(sigfigs)
 
-	draw_hist(distributions)
+	draw_bar(distributions)
 	print("Histogram completed. Plot saved.\n")
 	
 	statistical_testing(distributions)
@@ -172,7 +231,7 @@ def main():
 
 	im=im.convert("RGB")
 	pixels=im.load()	
-	sigfigs=np.reshape(sigfigs, (height, width))
+	sigfigs=np.reshape(sigfigs, (height-height%8, width-width%8))
 	new_pixels=colorcoding(pixels, sigfigs)
 	
 	print("Generating colorcoded image...")
