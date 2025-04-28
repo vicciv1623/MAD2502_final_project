@@ -1,4 +1,5 @@
 import re
+import numpy as np
 
 def word_freq_pairs(file_name : str):
     """Finds the frequencies of each word in a file"""
@@ -19,7 +20,6 @@ def word_frequencies(word_freq_pairs : dict) -> np.ndarray:
     return freqs
 
 def zipf_expected_freqs(file_name: str) -> np.ndarray:
-    total_words = word_count(file_name)
     word_freqs = word_freq_pairs(file_name)
     unique_words = len(word_frequencies(word_freqs))
     ranks = np.arange(1, unique_words + 1)
