@@ -1,6 +1,7 @@
 import re
+import scipy.stats as stats
 
-def word_frequencies(file_name : str) -> list[tuple(str, int)]:
+def word_frequencies(file_name : str):
     """Finds the frequencies of each word in a file
 
     Parameters:
@@ -21,7 +22,7 @@ def word_frequencies(file_name : str) -> list[tuple(str, int)]:
 
     return list(d)
 
-def word_proportions(file_name : str) -> list[tuple(str, float)]:
+def word_proportions(file_name : str):
     """Finds the proportion of each word in a text file
 
     Parameters: file_name (str): The file
@@ -30,7 +31,7 @@ def word_proportions(file_name : str) -> list[tuple(str, float)]:
 
     """
     word_freqs = dict(word_frequencies(file_name))
-    with open('file_name', 'r') as f:
+    with open(file_name, 'r') as f:
         text = re.sub("[^a-zA-Z ]", '', f.read())
         count = 0
         for word in text.split():
@@ -39,6 +40,8 @@ def word_proportions(file_name : str) -> list[tuple(str, float)]:
             value = value / count
 
     return list(word_freqs)
+
+
 
 
 
