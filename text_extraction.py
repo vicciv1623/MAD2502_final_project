@@ -1,5 +1,6 @@
 import re
 import numpy as np
+import matplotlib.pyplot as plt
 
 def word_freq_pairs(file_name : str):
     """Finds the frequencies of each word in a file"""
