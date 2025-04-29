@@ -2,8 +2,15 @@ import re
 import numpy as np
 import matplotlib.pyplot as plt
 
-def word_freq_pairs(file_name : str):
-    """Finds the frequencies of each word in a file"""
+def word_freq_pairs(file_name : str) -> dict:
+    """Finds the frequencies of each word in a file
+
+    Parameters: file_name
+    the text to be analyzed
+
+    Returns: dict
+    dictionary of word-frequency pairs
+    """
     with open(file_name, 'r') as f:
         d = dict()
         text = re.sub("[^a-zA-Z ]", '', f.read())
@@ -21,6 +28,15 @@ def word_frequencies(word_freq_pairs : dict) -> np.ndarray:
     return freqs
 
 def zipf_expected_freqs(file_name: str) -> np.ndarray:
+    """Calculates the expected frequencies of words in a text if their distribution follows Zipf's Law
+
+    Parameters: text_file
+    the text to be analyzed
+
+    Returns: np.ndarray
+    the expected frequencies of words
+    """
+
     word_freqs = word_freq_pairs(file_name)
     unique_words = len(word_frequencies(word_freqs))
     ranks = np.arange(1, unique_words + 1)
@@ -28,7 +44,8 @@ def zipf_expected_freqs(file_name: str) -> np.ndarray:
     norm = unique_words / const #need to normalize for zipf
     return norm / ranks
 
-def word_count(file_name: str) -> float:
+def word_count(file_name: str) -> int:
+    """Counts words in a text"""
     with open(file_name, 'r') as f:
         text = re.sub("[^a-zA-Z ]", '', f.read())
         count = 0
@@ -38,6 +55,14 @@ def word_count(file_name: str) -> float:
     return count
 
 def plot_zipf(text_file: str):
+    """Plots actual distribution of word frequencies in a text file versus expected frequencies
+    on a loglog plot
+
+    Parameters: text_file
+    the text to be analyzed
+
+    Returns: matplotlib plot
+    """
     empirical_freqs = word_frequencies(word_freq_pairs(text_file))
     expected_freqs = zipf_expected_freqs(text_file)
     ranks = np.arange(1, len(empirical_freqs) + 1)
