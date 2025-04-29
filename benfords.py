@@ -49,6 +49,14 @@ def main():
     digits = get_digits(int(sys.argv[2]))
     actual_proportions = get_digit_proportions(sys.argv[1], digits)
     expected_proportions = get_expected_proportions(digits)
+    ad_stat = [((expected_proportions[x] + expected_proportions[x + 1]) * (sum(actual_proportions[:x + 1]) - sum(expected_proportions[:x + 1])) ** 2) / (sum(expected_proportions[:x + 1]) * (1 - sum(expected_proportions[:x + 1]))) for x in range(int(sys.argv[2]) - 2)]
+    ad_stat = 4.5 * sum(ad_stat)
+    ad_stat = int(ad_stat * 10000) / 10000
+    print("Anderson-Darling Test\n")
+    print(f"Test statistic value: {ad_stat}")
+    print("Alpha level:    0.01    0.025    0.05    0.1    0.25    0.5")
+    print("Critical value: 3.688   2.89     2.304   1.743  1.060   0.596")
+    print("There is a significant result when the statistic value is greater than the critical value at the corresponding alpha level.")
     plt.bar(digits, actual_proportions, align='center', color = 'red')
     plt.plot(range(len(digits)), expected_proportions, color = 'blue')
     plt.plot(range(len(digits)), expected_proportions, 'o', color='blue')
@@ -56,6 +64,7 @@ def main():
     plt.xlabel("Digit")
     plt.ylabel("Proportion")
     plt.show()
+
 
 if __name__ == "__main__":
 	main()
